@@ -66,6 +66,8 @@ exports.main = function(options) {
     };
 
     var server = Connect.createServer();
+    if (secure) {
+        server.use(ConnectAuth(function (user, password) { return user === secure.user && password == secure.password; })); }
     //server.use(Connect.logger());
     server.use(Connect.conditionalGet());
     server.use(Connect.cookieDecoder());

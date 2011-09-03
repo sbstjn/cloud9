@@ -33,4 +33,4 @@
 	url = git://github.com/ajaxorg/UglifyJS.git
 [submodule "support/connect-basic-auth"]
 	path = support/connect-basic-auth
-	url = https://github.com/sr/connect-basic-auth.git
+	url = git://github.com/semu/connect-basic-auth.git
