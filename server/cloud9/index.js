@@ -5,6 +5,7 @@
 require("../../support/paths");
 
 var Connect = require("connect");
+var ConnectAuth = require('basicAuth');
 var IO = require("socket.io");
 var Fs = require("fs");
 var Path = require("path");
@@ -17,7 +18,8 @@ exports.main = function(options) {
         port = options.port,
         ip = options.ip,
         user = options.user,
-        group = options.group;
+        group = options.group,
+        secure = options.secure;
 
     if (!Path.existsSync(projectDir))
         throw new Error("Workspace directory does not exist: " + projectDir);

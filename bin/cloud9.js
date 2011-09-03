@@ -28,13 +28,18 @@ var options = Parser.parse([
             var pref = ( value.charAt(0) == "/" ) ? "" :  process.cwd() + "/";
             return require(pref + value.replace(".js", "")).Config;
         }
+    },
+    {short: "s", long: "secure", description: "Secure Cloud9 with user:password for HTTP basic access authentication", value: true, def: null, parser: function(value) {
+            var posDelimeter = value.indexOf(':');
+            return {user: value.substr(0, posDelimeter), password: value.substr(posDelimeter + 1)};
+        }
     }
 ], true);
 
 // options in a config file override CLI options
 if (options.config) {
-    for (var key in options.config)
-        options[key] = options.config[key];
+    for (var key in options.config) {
+        options[key] = options.config[key]; }
 }
 
 var version = options.version = JSON.parse(Fs.readFileSync(__dirname + "/../package.json")).version;

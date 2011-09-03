@@ -7,6 +7,7 @@ require("./requireJS-node");
 require.paths.unshift(__dirname + "/../server");
 
 require.paths.unshift(__dirname + "/connect/lib");
+require.paths.unshift(__dirname + "/connect-basic-auth/lib");
 require.paths.unshift(__dirname + "/asyncjs/lib");
 require.paths.unshift(__dirname + "/jsdav/lib");
 require.paths.unshift(__dirname + "/jsdav/support");
