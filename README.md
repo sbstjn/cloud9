@@ -65,6 +65,24 @@ To see more usage information and additional command line options use.
 
     $ node bin/cloud9.js -h
 
+## Secure with HTTP Authentication
+
+You can secure cloud9 IDE with a basic HTTP authentication. Username and password can be set in a configuration file or passed as an argument as well.
+
+Pass username and password as argument:
+
+    $ node bin/cloud9.js -s user:password
+
+Set via configuration file:
+
+    exports.Config = {
+        workspace: ".",
+        ip: "127.0.0.1",
+        port: 3000,
+        gaeLocalPath: ".",
+        secure: {user: "user", password: "password"}
+    };
+
 ## Installation
 
 Via git (or downloaded tarball):
