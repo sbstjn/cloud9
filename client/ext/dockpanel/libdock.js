@@ -214,7 +214,7 @@ var DockableLayout = module.exports = function(parentHBox, cbFindPage, cbStorePa
         if (!bar.vbox) {
             var _self = this;
             bar.vbox = bar.parentNode.insertBefore(new apf.vbox({
-                padding   : 3,
+                padding   : 0,
                 width     : bar.$dockData && bar.$dockData.width || 260,
                 splitters : true,
                 vdock     : 1,
@@ -225,7 +225,8 @@ var DockableLayout = module.exports = function(parentHBox, cbFindPage, cbStorePa
                         skin       : "dockheader",
                         "class"    : "expanded",
                         nosplitter : true,
-                        height     : 11,
+                        height     : 12,
+                        resizable  : false,
                         margin     : "0 0 -3 0",
                         onclick    : function(){
                             _self.collapseBar(bar);
@@ -303,8 +304,9 @@ var DockableLayout = module.exports = function(parentHBox, cbFindPage, cbStorePa
      */
     this.show = function(amlNode){
         var button = amlNode.$dockbutton || amlNode;
-        //button.showMenu();
-        button.dispatchEvent("mousedown", {htmlEvent: {}});
+
+        if (button.value === false)
+            button.dispatchEvent("mousedown", {htmlEvent: {}});
     };
 
     /**
@@ -1064,7 +1066,7 @@ var DockableLayout = module.exports = function(parentHBox, cbFindPage, cbStorePa
             ref        : section,
             pinned     : "true",
             animate    : "false",
-            skin       : "dockwindowbasic",
+            skin       : "dockwindowblack",
             resizable  : "left bottom",
             dock       : 1,
             ondisplay  : function(){
@@ -1078,12 +1080,12 @@ var DockableLayout = module.exports = function(parentHBox, cbFindPage, cbStorePa
                 var dist  = menu.$ext.offsetWidth > width - pos[0] //Weird bug - chrome only??
                     ? width - pos[0] 
                     : menu.$ext.offsetWidth;
-                
-                menu.$ext.style.marginLeft = (-1 * dist) + "px";
+
+                menu.$ext.style.marginLeft = (-1 * dist - 6) + "px";
                 
                 setTimeout(function(){
                     menu.$ext.style.marginRight = "0";
-                    menu.$ext.style.right = (width - pos[0]) + "px";
+                    menu.$ext.style.right = (width - pos[0] + 6) + "px";
                     menu.$ext.style.left = "";
                     menu.$ext.style.zIndex = "9999";
                 });
@@ -1100,7 +1102,7 @@ var DockableLayout = module.exports = function(parentHBox, cbFindPage, cbStorePa
             },
             childNodes : [
                 new apf.tab({
-                    anchors : "0 0 0 0", 
+                    anchors : "4 4 4 4", 
                     skin : "docktab",
                     buttons : "scale",
                     dock    : 1,
@@ -1282,7 +1284,7 @@ var DockableLayout = module.exports = function(parentHBox, cbFindPage, cbStorePa
             childNodes : [
                 new apf.divider({
                     skin : "divider-debugpanel",
-                    margin : "3 5 2 5",
+                    margin : "3 4 2 2",
                     dock    : 1,
                     draggable : "true"
                 })

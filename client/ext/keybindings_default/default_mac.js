@@ -34,6 +34,10 @@ return keys.onLoad({
             "stepover": "F10",
             "stepout": "Shift-F11"
         },
+        "focus": {
+            "focus": "Command-E",
+            "focusslow": "Command-Shift-E"
+        },
         "gotoline": {
             "gotoline": "Command-L"
         },
@@ -80,7 +84,8 @@ return keys.onLoad({
             "tab7": "Command-7",
             "tab8": "Command-8",
             "tab9": "Command-9",
-            "tab0": "Command-0"
+            "tab0": "Command-0",
+            "showtabintree": "Command-Shift-L"
         },
         "code" : {
             "selectall": "Command-A",

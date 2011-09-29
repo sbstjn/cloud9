@@ -7,6 +7,8 @@
         var confirmed = false;
 
         function remove() {
+            if(window.cloud9config.readonly == true)
+                return false;
             if (!confirmed) {
                 var files = trFiles.getSelection();
 
@@ -75,9 +77,9 @@
         <!--a:button skin="header-btn" icon="order.png" top="-22" right="7"></a:button-->
         <a:tree id="trFiles" canrename="true" border="0" simpledata="true"
           contextmenu="mnuCtxTree" multiselect="false" reselectable="true" 
-          onbeforemove="this.disable();" autoselect="false"
+          onbeforemove="this.disable();" autoselect="false" dragroot="false"
           onbeforeremove="return remove()" disabled="{{!stServerConnected.active}}"
-          flex="1" anchors = "0 0 0 0" onmouseover="require('ext/tree/tree').onTreeOver()"
+          flex="1" anchors="0 0 0 0" onmouseover="require('ext/tree/tree').onTreeOver()"
           onmouseout="require('ext/tree/tree').onTreeOut()"
         >
             <a:each match="[project|file|folder]" sort="[@name]" sort-method="filesort">

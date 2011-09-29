@@ -58,7 +58,6 @@
             padding: 10px 10px 0 10px;
             overflow: hidden;
             background: #e8e8e8;
-            border-right: 1px solid #7B7B7B;
         }
         .blameOutput div {
             height: 16px;
@@ -66,8 +65,8 @@
             white-space : nowrap;
         }
     ]]></a:style>
-    <a:tab id="tabGitTools" skin="docktab" visible="false">
-        <a:page caption="Git Tools">
+    <a:tab id="tabGitTools" skin="docktab" buttons="close" visible="false">
+        <a:page caption="Git Tools" id="pgGittools">
             <a:vbox flex="1" class="git_tools" anchors="0 0 0 0">
                 <a:hbox>
                     <a:label id="lblGitLog"

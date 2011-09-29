@@ -14,13 +14,14 @@ var dock   = require("ext/dockpanel/dockpanel");
 var fs = require("ext/filesystem/filesystem");
 var noderunner = require("ext/noderunner/noderunner");
 var markup = require("text!ext/debugger/debugger.xml");
+var inspector = require("ext/debugger/inspector");
 
 module.exports = ext.register("ext/debugger/debugger", {
     name    : "Debug",
     dev     : "Ajax.org",
     type    : ext.GENERAL,
     alone   : true,
-    //offline : false,
+    offline : false,
     markup  : markup,
     buttonClassName : "debug1",
     deps    : [fs, noderunner],
@@ -32,7 +33,8 @@ module.exports = ext.register("ext/debugger/debugger", {
             }
         }
     },
-
+    
+    nodesAll: [],
     nodes : [],
     hotitems: {},
 
@@ -50,10 +52,10 @@ module.exports = ext.register("ext/debugger/debugger", {
         });
         
         stDebugProcessRunning.addEventListener("activate", function() {
-            _self.enable();
+            _self.activate();
         });
         stProcessRunning.addEventListener("deactivate", function() {
-            _self.disable();
+            _self.deactivate();
         });
         
         ide.addEventListener("afteropenfile", function(e) {
@@ -102,8 +104,8 @@ module.exports = ext.register("ext/debugger/debugger", {
             menu : "Debugger/Call Stack",
             primary : {
                 backgroundImage: "/static/style/images/debugicons.png",
-                defaultState: { x: -6, y: -217 },
-                activeState: { x: -6, y: -217 }
+                defaultState: { x: -8, y: -47 },
+                activeState: { x: -8, y: -47 }
             }
         }, function(type) {
             ext.initExtension(_self);
@@ -114,8 +116,8 @@ module.exports = ext.register("ext/debugger/debugger", {
             menu : "Debugger/Interactive",
             primary : {
                 backgroundImage: "/static/style/images/debugicons.png",
-                defaultState: { x: -7, y: -310 },
-                activeState: { x: -7, y: -310 }
+                defaultState: { x: -8, y: -130 },
+                activeState: { x: -8, y: -130 }
             }
         }, function(type) {
             ext.initExtension(_self);
@@ -126,8 +128,8 @@ module.exports = ext.register("ext/debugger/debugger", {
             menu : "Debugger/Variables",
             primary : {
                 backgroundImage: "/static/style/images/debugicons.png",
-                defaultState: { x: -6, y: -261 },
-                activeState: { x: -6, y: -261 }
+                defaultState: { x: -8, y: -174 },
+                activeState: { x: -8, y: -174 }
             }
         }, function(type) {
             ext.initExtension(_self);
@@ -138,8 +140,8 @@ module.exports = ext.register("ext/debugger/debugger", {
             menu : "Debugger/Breakpoints",
             primary : {
                 backgroundImage: "/static/style/images/debugicons.png",
-                defaultState: { x: -6, y: -360 },
-                activeState: { x: -6, y: -360 }
+                defaultState: { x: -8, y: -88 },
+                activeState: { x: -8, y: -88 }
             }
         }, function(type) {
             ext.initExtension(_self);
@@ -157,6 +159,11 @@ module.exports = ext.register("ext/debugger/debugger", {
                 ide.barTools.insertBefore(button, btnRun);
             else
                 ide.barTools.appendChild(button);
+            
+            //collect all the elements that are normal nodes
+            if (button.nodeType == 1) {
+                this.nodesAll.push(button);
+            }
         }
 
         this.hotitems["resume"]   = [btnResume];
@@ -303,8 +310,8 @@ module.exports = ext.register("ext/debugger/debugger", {
         }
         this.inSync = false;
     },
-
-    enable : function(){
+    
+    activate : function(){
         ext.initExtension(this);
         
         this.nodes.each(function(item){
@@ -313,14 +320,42 @@ module.exports = ext.register("ext/debugger/debugger", {
         });
     },
 
-    disable : function(){
+    deactivate : function(){
         this.nodes.each(function(item){
             if (item.hide)
                 item.hide();
         });
-        //log.disable(true);
+    },    
+    
+    enable : function(){
+        if (!this.disabled) return;
+        
+        this.nodesAll.each(function(item){            
+            item.setProperty("disabled", item.$lastDisabled !== undefined
+                ? item.$lastDisabled
+                : true);
+            delete item.$lastDisabled;
+        });
+        this.disabled = false;
     },
 
+    disable : function(){
+        if (this.disabled) return;
+        
+        //stop debugging
+        require('ext/run/run').stop();
+        this.deactivate();
+        
+        //loop from each item of the plugin and disable it
+        this.nodesAll.each(function(item){            
+            if (!item.$lastDisabled)
+                item.$lastDisabled = item.disabled;
+            item.disable();
+        });
+        
+        this.disabled = true;
+    },
+    
     destroy : function(){
         this.nodes.each(function(item){
             item.destroy(true, true);
